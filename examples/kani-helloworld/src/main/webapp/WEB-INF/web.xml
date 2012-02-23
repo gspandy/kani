@@ -17,7 +17,7 @@
     <init-param>
       <description>Kani application identifier</description>
       <param-name>kani.application.id</param-name>
-      <param-value>org.kani.example</param-value>
+      <param-value>org.kani.example.helloworld</param-value>
     </init-param>
   </servlet>
   <servlet-mapping>
