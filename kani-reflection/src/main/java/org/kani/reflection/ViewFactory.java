@@ -14,8 +14,7 @@ public class ViewFactory implements org.kani.ViewFactory {
 		Set<Class<?>> classes = new Reflections(applicationId).getTypesAnnotatedWith(View.class);
 		Collection<Object> views = new ArrayList<Object>();
 		for (Class<?> clazz : classes) {
-			Object view;
-				view = clazz.newInstance();
+			Object view = clazz.newInstance();
 			views.add(view);
 		}
 		return views;

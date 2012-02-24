@@ -4,8 +4,10 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.ServiceLoader;
+
+import org.kani.i18n.MessageSource;
+import org.kani.i18n.ResourceBundleMessageSource;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -17,10 +19,8 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
-import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
 
@@ -32,24 +32,20 @@ public class Application extends com.vaadin.Application {
 
 	Map<String, Object> views = new HashMap<String, Object>();
 
-	ResourceBundle b;
-
-	private void initTextResources() {
-		try {
-			b = ResourceBundle.getBundle("app_messages");
-		} catch (Exception e) {
-		}
-	}
-
-
+	private MessageSource messageSource;
 
 	@Override
 	public void init() {
-		this.initTextResources();
-
+		this.initMessageSource();
 		this.initViews();
-
 		this.loadProtectedResources();
+	}
+
+	/**
+	 * TODO: Externalize dependency to implementation.
+	 */
+	private void initMessageSource() {
+		messageSource = new ResourceBundleMessageSource(this);
 	}
 
 	private void initViews() {
@@ -69,95 +65,10 @@ public class Application extends com.vaadin.Application {
 		throw new IllegalStateException("No view factory found.");
 	}
 
-	public void show() {
-		try {
-			if (b != null) {
-				String applicationName = b.getString(getApplicationId() + ".name");
-			}
-		} catch (Exception e) {
-		}
 
-		//		Window mainWindow = new Window("Starter_kani Application");
-		//		Label label = new Label("Hello Vaadin user");
-		//		mainWindow.addComponent(label);
-		//		setMainWindow(mainWindow);
-
-		Window mainWindow = new Window();
-		Label label = new Label("Hello Vaadin user" + views.keySet().size());
-		mainWindow.addComponent(label);
-		setMainWindow(mainWindow);
-
-		final VerticalSplitPanel sp = new VerticalSplitPanel();
-		mainWindow.addComponent(sp);
-		//
-		//		//		f.add(new JLabel(applicationName), BorderLayout.NORTH);
-		//
-		//
-		Panel lp = new Panel();
-		sp.addComponent(lp);
-		sp.addComponent(new Label(" TEST "));
-		//
-		for (String key : views.keySet()) {
-			final Object view = views.get(key);
-			System.out.println("FFFFFFFFFFFound " +key);
-
-			String name = key;
-			if (b != null) {
-				try {
-					name = b.getString(key);
-				} catch (Exception e) {
-				}
-			}
-
-			//				Label label2 = new Label(name);
-			//				mainWindow.addComponent(label2);
-
-			//
-			lp.addComponent(new Button(name, new Button.ClickListener() {
-
-				public void buttonClick(ClickEvent event) {
-					try {
-						Method createMethod = view.getClass().getMethod("create");
-						Component p = (Component) createMethod.invoke(view);
-						sp.addComponent(p);
-						return;
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}));
-			//				//				() {
-			//				//
-			//				//					public void actionPerformed(ActionEvent arg0) {
-			//				//						try {
-			//				//							Component p = (Component) m.invoke(o);
-			//				//							sp.setRightComponent(p);
-			//				//						} catch (Exception e) {
-			//				//							// TODO Auto-generated catch block
-			//				//							e.printStackTrace();
-			//				//						}
-			//				//
-			//				//					}
-			//				//				}));
-
-		}
-
-
-	}
-
-	private String getApplicationId() {
+	public String getApplicationId() {
 		return getProperty(APPLICATION_ID);
 	}
-
-
-
-	//		   private final List<ActionContribution> actionContributions = Collections
-	//		         .synchronizedList(new ArrayList<ActionContribution>());
-	//		   private final Map<ActionContribution, Button> buttonActionMap = Collections
-	//		         .synchronizedMap(new HashMap<ActionContribution, Button>());
-	//		   private final Map<ActionContribution, MenuItem> menuActionMap = Collections
-	//		         .synchronizedMap(new HashMap<ActionContribution, MenuItem>());
 
 	private Window main;
 
@@ -166,8 +77,6 @@ public class Application extends com.vaadin.Application {
 	private VerticalLayout mainLayout;
 	private TabSheet tabSheet;
 	private Window aboutWindow;
-
-	private volatile boolean initialized = false;
 
 	private HorizontalLayout toolbar;
 
@@ -186,7 +95,11 @@ public class Application extends com.vaadin.Application {
 	}
 
 	private void loadProtectedResources() {
-		main = new Window("PE International OSGi Samples");
+		String applicationTitle = getApplicationId() + ".title";
+		if (messageSource != null) {
+			applicationTitle = messageSource.getMessage(getApplicationId() + ".title");
+		}
+		main = new Window(applicationTitle);
 		mainLayout = (VerticalLayout) main.getContent();
 		mainLayout.setMargin(false);
 		mainLayout.setStyleName("blue");
@@ -222,27 +135,8 @@ public class Application extends com.vaadin.Application {
 				e.printStackTrace();
 			}
 		}
-
-		//		      for (ActionContribution actionContribution : actionContributions) {
-		//		         addActionContribution(actionContribution);
-		//		      }
-
-		initialized = true;      
 	}
 
-	//		   @Override
-	//		   public void init() {
-	//		      logger.info("Initializing PE International OSGi samples ...");
-	//		      setTheme(Reindeer.THEME_NAME);
-	//		      // setTheme(Runo.THEME_NAME);
-	//		      // setTheme("demo");
-	//		      
-	//		      login = new LoginWindow(this);
-	//
-	//		      setMainWindow(login);
-	//		   }
-
-	@SuppressWarnings("serial")
 	private MenuBar getMenu() {
 		MenuBar menubar = new MenuBar();
 		menubar.setWidth("100%");
@@ -254,11 +148,11 @@ public class Application extends com.vaadin.Application {
 			}
 		});
 		actionMenu.addSeparator();
-//		actionMenu.addItem("Logout", new Command() {
-//			public void menuSelected(MenuItem selectedItem) {
-//				logout();
-//			}
-//		});
+		//		actionMenu.addItem("Logout", new Command() {
+		//			public void menuSelected(MenuItem selectedItem) {
+		//				logout();
+		//			}
+		//		});
 
 		final MenuBar.MenuItem viewMenu = menubar.addItem("Help", null);
 		viewMenu.addItem("About...", new Command() {
@@ -281,13 +175,21 @@ public class Application extends com.vaadin.Application {
 		header.setWidth("100%");
 		header.setMargin(true);
 		header.setSpacing(true);
-		// header.setStyleName(Reindeer.LAYOUT_BLACK);
 
 		CssLayout titleLayout = new CssLayout();
-		H1 title = new H1(getApplicationId() + ".title");
+		
+		String applicationTitle = getApplicationId() + ".title";
+		if (messageSource != null) {
+			applicationTitle = messageSource.getMessage(getApplicationId() + ".title");
+		}
+		H1 title = new H1(applicationTitle);
 		titleLayout.addComponent(title);
 
-		SmallText description = new SmallText(getApplicationId() + ".description");
+		String applicationDescription = getApplicationId() + ".description";
+		if (messageSource != null) {
+			applicationDescription = messageSource.getMessage(getApplicationId() + ".description");
+		}
+		SmallText description = new SmallText(applicationDescription);
 		description.setSizeUndefined();
 		titleLayout.addComponent(description);
 		titleLayout.addComponent(description);
@@ -329,7 +231,6 @@ public class Application extends com.vaadin.Application {
 			titleLayout.addComponent(description);
 			aboutWindow.addComponent(titleLayout);
 
-			@SuppressWarnings("serial")
 			Button close = new Button("Close", new Button.ClickListener() {
 				public void buttonClick(ClickEvent event) {
 					(aboutWindow.getParent()).removeWindow(aboutWindow);
@@ -342,69 +243,6 @@ public class Application extends com.vaadin.Application {
 		return aboutWindow;
 	}
 
-	//		   public void bindViewContribution(ViewContribution viewContribution) {
-	//		      viewContributions.add(viewContribution);
-	//		      if (initialized) {
-	//		         tabSheet.addTab(viewContribution.getView(this), viewContribution.getName(),
-	//		               new ThemeResource(viewContribution.getIcon()));
-	//		      }
-	//		   }
-	//
-	//		   public void unbindViewContribution(ViewContribution viewContribution) {
-	//		      viewContributions.remove(viewContribution);
-	//		      if (initialized) {
-	//		         tabSheet.removeComponent(viewContribution.getView(this));
-	//		      }
-	//		   }
-	//
-	//		   public void bindActionContribution(final ActionContribution actionContribution) {
-	//		      logger.debug("bindActionContribution()");
-	//		      if (initialized) {
-	//		         addActionContribution(actionContribution);
-	//		      }
-	//		      actionContributions.add(actionContribution);
-	//		   }
-	//
-	//		   private void addActionContribution(final ActionContribution actionContribution) {
-	//		      final Application application = this;
-	//		      Button button = new Button(actionContribution.getText());
-	//		      button.setIcon(new ThemeResource(actionContribution.getIcon()));
-	//		      button.addListener(new ClickListener() {
-	//		         private static final long serialVersionUID = 1L;
-	//
-	//		         @Override
-	//		         public void buttonClick(ClickEvent event) {
-	//		            actionContribution.execute(application);
-	//		         }
-	//		      });
-	//		      getToolbar().addComponent(button);
-	//		      buttonActionMap.put(actionContribution, button);
-	//
-	//		      @SuppressWarnings("serial")
-	//		      MenuItem menuItem = actionMenu.addItem(actionContribution.getText(), new Command() {
-	//		         @Override
-	//		         public void menuSelected(MenuItem selectedItem) {
-	//		            actionContribution.execute(application);
-	//		         }
-	//		      });
-	//		      menuItem.setIcon(new ThemeResource(actionContribution.getIcon()));
-	//		      menuActionMap.put(actionContribution, menuItem);
-	//		   }
-	//
-	//		   public void unbindActionContribution(ActionContribution actionContribution) {
-	//		      logger.debug("unbindActionContribution()");
-	//		      Button button = buttonActionMap.get(actionContribution);
-	//		      toolbar.removeComponent(button);
-	//		      buttonActionMap.remove(actionContribution);
-	//
-	//		      MenuItem menuItem = menuActionMap.get(actionContribution);
-	//		      actionMenu.removeChild(menuItem);
-	//		      menuActionMap.remove(actionContribution);
-	//
-	//		      actionContributions.remove(actionContribution);
-	//		   }
-
-	@SuppressWarnings("serial")
 	class H1 extends Label {
 		public H1(String caption) {
 			super(caption);
@@ -413,7 +251,6 @@ public class Application extends com.vaadin.Application {
 		}
 	}
 
-	@SuppressWarnings("serial")
 	class H2 extends Label {
 		public H2(String caption) {
 			super(caption);
@@ -422,7 +259,6 @@ public class Application extends com.vaadin.Application {
 		}
 	}
 
-	@SuppressWarnings("serial")
 	class SmallText extends Label {
 		public SmallText(String caption) {
 			super(caption);
