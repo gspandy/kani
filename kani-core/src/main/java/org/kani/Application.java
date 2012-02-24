@@ -54,7 +54,7 @@ public class Application extends com.vaadin.Application {
 		
 		Collection<Object> factoryViews = viewFactory.createAll(getApplicationId());
 		for (Object view : factoryViews) {
-			views.put(view.getClass().getPackage().getName(), view);
+			views.put(view.getClass().getName(), view);
 		}
 	}
 
@@ -93,10 +93,7 @@ public class Application extends com.vaadin.Application {
 	private MenuBar.MenuItem actionMenu;
 
 	private void loadProtectedResources() {
-		String applicationTitle = getApplicationId() + ".title";
-		if (messageSource != null) {
-			applicationTitle = messageSource.getMessage(getApplicationId() + ".title");
-		}
+		String applicationTitle = getMessage("title");
 		main = new Window(applicationTitle);
 		mainLayout = (VerticalLayout) main.getContent();
 		mainLayout.setMargin(false);
@@ -123,7 +120,7 @@ public class Application extends com.vaadin.Application {
 
 		for (String viewKey : views.keySet()) {
 			Object view = views.get(viewKey);
-			String viewName = viewKey;
+			String viewName = getMessage(viewKey, "title");
 			Method createMethod;
 			try {
 				createMethod = view.getClass().getMethod("create", org.kani.Application.class);
@@ -133,6 +130,18 @@ public class Application extends com.vaadin.Application {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	private String getMessage(final String codePrefix) {
+		return getMessage(getApplicationId(), codePrefix);
+	}
+	
+	private String getMessage(final String baseName, final String codePrefix) {
+		String message = baseName + "." + codePrefix;
+		if (messageSource != null) {
+			message = messageSource.getMessage(getApplicationId() + "." + codePrefix);
+		}
+		return message;
 	}
 
 	private MenuBar getMenu() {
@@ -164,17 +173,11 @@ public class Application extends com.vaadin.Application {
 
 		CssLayout titleLayout = new CssLayout();
 		
-		String applicationTitle = getApplicationId() + ".title";
-		if (messageSource != null) {
-			applicationTitle = messageSource.getMessage(getApplicationId() + ".title");
-		}
+		String applicationTitle = getMessage("title");
 		H1 title = new H1(applicationTitle);
 		titleLayout.addComponent(title);
 
-		String applicationDescription = getApplicationId() + ".description";
-		if (messageSource != null) {
-			applicationDescription = messageSource.getMessage(getApplicationId() + ".description");
-		}
+		String applicationDescription = getMessage("description");
 		SmallText description = new SmallText(applicationDescription);
 		description.setSizeUndefined();
 		titleLayout.addComponent(description);
