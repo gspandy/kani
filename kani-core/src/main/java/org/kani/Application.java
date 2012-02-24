@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.kani.i18n.MessageSource;
 
@@ -79,7 +78,7 @@ public class Application extends com.vaadin.Application {
 		return applicationId;
 	}
 	
-	protected void setApplicationId(String applicationId) {
+	public void setApplicationId(String applicationId) {
 		this.applicationId = applicationId;
 	}
 

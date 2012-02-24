@@ -11,10 +11,12 @@
     <context:annotation-config />
     <context:component-scan base-package="org.kani.example.spring" />
 
-    <bean id="kaniAppliction" class="org.kani.spring.Application" />
+    <bean id="kaniAppliction" class="org.kani.spring.Application">
+        <property name="applicationId" value="org.kani.example.spring" />
+    </bean>
 
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-        <property name="basename" value="classpath:/org/kani/example/spring/messages" />
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="classpath:org/kani/example/spring/messages" />
     </bean>
 
 </beans>
