@@ -10,6 +10,7 @@
     <groupId>org.kani</groupId>
     <artifactId>kani-serviceloader</artifactId>
     <packaging>jar</packaging>
+    <name>Kani ServiceLoader</name>
     <version>0.0.1-SNAPSHOT</version>
     <dependencies>
         <dependency>

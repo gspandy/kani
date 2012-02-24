@@ -8,6 +8,7 @@
     </parent>
     <groupId>org.kani</groupId>
     <artifactId>kani-spring</artifactId>
+    <name>Kani Spring</name>
     <version>0.0.1-SNAPSHOT</version>
     <dependencies>
         <dependency>

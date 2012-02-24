@@ -10,6 +10,7 @@
     <groupId>org.kani</groupId>
     <artifactId>kani-core</artifactId>
     <packaging>jar</packaging>
+    <name>Kani Core</name>
     <version>0.0.1-SNAPSHOT</version>
     <dependencies>
         <dependency>

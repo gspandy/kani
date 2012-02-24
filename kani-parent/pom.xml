@@ -2,6 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.kani</groupId>
   <artifactId>kani.parent</artifactId>
+  <name>Kani Parent</name>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>

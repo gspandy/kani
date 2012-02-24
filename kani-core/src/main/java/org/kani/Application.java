@@ -139,7 +139,7 @@ public class Application extends com.vaadin.Application {
 	private String getMessage(final String baseName, final String codePrefix) {
 		String message = baseName + "." + codePrefix;
 		if (messageSource != null) {
-			message = messageSource.getMessage(getApplicationId() + "." + codePrefix);
+			message = messageSource.getMessage(baseName + "." + codePrefix);
 		}
 		return message;
 	}

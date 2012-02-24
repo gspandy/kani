@@ -11,8 +11,7 @@
   <artifactId>kani-example-spring</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
-  <name>kani-helloworld Maven Webapp</name>
-  <url>http://maven.apache.org</url>
+  <name>Kani Example Spring</name>
   <dependencies>
     <dependency>
         <groupId>org.kani</groupId>
