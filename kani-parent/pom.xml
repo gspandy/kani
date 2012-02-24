@@ -10,6 +10,7 @@
     
     <!-- Examples -->
   	<module>../examples/kani-helloworld</module>
+  	<module>kani-spring</module>
   </modules>
   <dependencyManagement>
    <dependencies>
