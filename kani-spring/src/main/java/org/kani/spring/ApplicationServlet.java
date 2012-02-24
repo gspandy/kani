@@ -13,26 +13,27 @@ import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 @SuppressWarnings("serial")
 public class ApplicationServlet extends AbstractApplicationServlet {
 	
+	private static final String APPLICATION_BEAN_NAME = "kaniAppliction";
+
 	private WebApplicationContext applicationContext;
 	
 	private Class<? extends Application> applicationClass;
-	
-	private String applicationBean;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void init(ServletConfig servletConfig) throws ServletException {
 		super.init(servletConfig);
 
-		applicationBean = servletConfig.getInitParameter("applicationBean");
-
-		if (applicationBean == null) {
-			throw new ServletException(
-					"ApplicationBean not specified in servlet parameters");
-		}
-
 		applicationContext = WebApplicationContextUtils.getWebApplicationContext(servletConfig.getServletContext());
-		applicationClass = (Class<? extends Application>) applicationContext.getType(applicationBean);
+		if (!applicationContext.containsBean(APPLICATION_BEAN_NAME)) {
+			throw new IllegalStateException("No application bean with name " + APPLICATION_BEAN_NAME + " found.");
+		}
+		
+		if (!applicationContext.isTypeMatch(APPLICATION_BEAN_NAME, Application.class)) {
+			Object applicationBean = applicationContext.getBean(APPLICATION_BEAN_NAME);
+			throw new IllegalStateException(String.format("Application bean has type %s but should be a subtype of %s.", applicationBean.getClass().getName(), Application.class.getName()));
+		}
+		applicationClass = (Class<? extends Application>) applicationContext.getType(APPLICATION_BEAN_NAME);
 	}
 
 	@Override
@@ -42,6 +43,6 @@ public class ApplicationServlet extends AbstractApplicationServlet {
 
 	@Override
 	protected Application getNewApplication(HttpServletRequest request) {
-		return (Application) applicationContext.getBean(applicationBean);
+		return (Application) applicationContext.getBean(APPLICATION_BEAN_NAME);
 	}
 }

@@ -6,7 +6,7 @@
   <packaging>pom</packaging>
   <modules>
   	<module>../kani-core</module>
-  	<module>../kani-serviceloader</module>
+  	<module>../kani-reflection</module>
 	<module>../kani-spring</module>
     
         <!-- Examples -->

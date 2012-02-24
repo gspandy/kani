@@ -4,10 +4,9 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ServiceLoader;
+import java.util.logging.Logger;
 
 import org.kani.i18n.MessageSource;
-import org.kani.i18n.ResourceBundleMessageSource;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -27,52 +26,64 @@ import com.vaadin.ui.themes.Reindeer;
 
 @SuppressWarnings("serial")
 public class Application extends com.vaadin.Application {
-
-	private static final String APPLICATION_ID = "kani.application.id";
-
+	
 	Map<String, Object> views = new HashMap<String, Object>();
 
 	private MessageSource messageSource;
+	
+	private ViewFactory viewFactory;
+
+	private String applicationId;
 
 	@Override
 	public void init() {
-		this.initMessageSource();
+		this.setup();
 		this.initViews();
 		this.loadProtectedResources();
 	}
 
 	/**
-	 * TODO: Externalize dependency to implementation.
+	 * Can be overridden by subclasses.
 	 */
-	private void initMessageSource() {
-		messageSource = new ResourceBundleMessageSource(this);
+	protected void setup() {
 	}
 
 	private void initViews() {
-		ViewFactory viewFactory = getViewFactory();
+		if (viewFactory == null) {
+			throw new IllegalStateException("No view factory provided.");
+		}
+		
 		Collection<Object> factoryViews = viewFactory.createAll(getApplicationId());
 		for (Object view : factoryViews) {
 			views.put(view.getClass().getPackage().getName(), view);
 		}
-
 	}
 
-	private ViewFactory getViewFactory() {
-		ServiceLoader<ViewFactory> viewFactoryLoader = ServiceLoader.load(ViewFactory.class);
-		for (ViewFactory viewFactory : viewFactoryLoader) {
-			return viewFactory;
-		}
-		throw new IllegalStateException("No view factory found.");
+	protected final MessageSource getMessageSource() {
+		return messageSource;
 	}
 
+	protected final void setMessageSource(MessageSource messageSource) {
+		this.messageSource = messageSource;
+	}
+	
+	protected final ViewFactory getViewFactory() {
+		return viewFactory;
+	}
+
+	protected final void setViewFactory(ViewFactory viewFactory) {
+		this.viewFactory = viewFactory;
+	}
 
 	public String getApplicationId() {
-		return getProperty(APPLICATION_ID);
+		return applicationId;
+	}
+	
+	protected void setApplicationId(String applicationId) {
+		this.applicationId = applicationId;
 	}
 
 	private Window main;
-
-	private Window login;
 
 	private VerticalLayout mainLayout;
 	private TabSheet tabSheet;
@@ -81,18 +92,6 @@ public class Application extends com.vaadin.Application {
 	private HorizontalLayout toolbar;
 
 	private MenuBar.MenuItem actionMenu;
-
-	public void authenticate(String login, String password) throws Exception {
-		if ("admin".equals(login) && "admin".equals(password)) {
-			//		         User user = new UserImpl(login);
-			//		         setUser(user);
-			loadProtectedResources();
-			return;
-		}
-
-		throw new Exception("Login failed!");
-
-	}
 
 	private void loadProtectedResources() {
 		String applicationTitle = getApplicationId() + ".title";
@@ -147,13 +146,7 @@ public class Application extends com.vaadin.Application {
 				main.showNotification("Built-in Action executed!");
 			}
 		});
-		actionMenu.addSeparator();
-		//		actionMenu.addItem("Logout", new Command() {
-		//			public void menuSelected(MenuItem selectedItem) {
-		//				logout();
-		//			}
-		//		});
-
+		
 		final MenuBar.MenuItem viewMenu = menubar.addItem("Help", null);
 		viewMenu.addItem("About...", new Command() {
 			public void menuSelected(MenuItem selectedItem) {
@@ -162,12 +155,6 @@ public class Application extends com.vaadin.Application {
 		});
 
 		return menubar;
-	}
-
-	protected void logout() {
-		setUser(null);
-		removeWindow(main);
-		setMainWindow(login);      
 	}
 
 	private Layout getHeader() {
