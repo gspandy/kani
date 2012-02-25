@@ -18,7 +18,6 @@
         <!-- To allow session-scoped beans -->
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
     </listener>
-    
     <servlet>
         <servlet-name>Kani_Application</servlet-name>
         <servlet-class>org.kani.spring.ApplicationServlet</servlet-class>
