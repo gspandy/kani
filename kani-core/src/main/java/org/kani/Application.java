@@ -5,8 +5,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.kani.i18n.LocaleHolder;
 import org.kani.i18n.MessageSource;
+import org.kani.i18n.MessageSourceHolder;
 
+import com.vaadin.service.ApplicationContext.TransactionListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
@@ -24,7 +27,7 @@ import com.vaadin.ui.themes.Reindeer;
 
 
 @SuppressWarnings("serial")
-public class Application extends com.vaadin.Application {
+public class Application extends com.vaadin.Application implements TransactionListener {
 	
 	Map<String, Object> views = new HashMap<String, Object>();
 
@@ -36,7 +39,15 @@ public class Application extends com.vaadin.Application {
 
 	@Override
 	public void init() {
+		if (getContext() != null) {
+			getContext().addTransactionListener(this);
+		}
+
 		this.setup();
+		
+		LocaleHolder.setLocale(getLocale());
+		MessageSourceHolder.setMessageSource(getMessageSource());
+
 		this.initViews();
 		this.loadProtectedResources();
 	}
@@ -254,5 +265,20 @@ public class Application extends com.vaadin.Application {
 			setStyleName(Reindeer.LABEL_SMALL);
 		}
 	}
+	
+    public void transactionStart(com.vaadin.Application application, Object transactionData) {
+    	LocaleHolder.setLocale(application.getLocale());
+    	try {
+    		Application kaniApplication = (Application) application;
+    		MessageSourceHolder.setMessageSource(getMessageSource());
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+    }
+    
+    public void transactionEnd(com.vaadin.Application application, Object transactionData) {
+    	LocaleHolder.reset();
+    	MessageSourceHolder.reset();
+    }
 
 }

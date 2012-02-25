@@ -24,7 +24,7 @@ public class Application extends org.kani.Application {
 			throw new IllegalStateException("No view factory found.");
 		}
 
-		setMessageSource(new ResourceBundleMessageSource(this));
+		setMessageSource(new ResourceBundleMessageSource(this.getApplicationId()));
 	}
 
 }

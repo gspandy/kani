@@ -12,7 +12,7 @@ public class Application extends org.kani.Application implements ApplicationCont
 	
 	@Autowired
 	public void setMessageSource(MessageSource messageSource) {
-		MessageSourceAdapter messageSourceAdapter = new MessageSourceAdapter(this, messageSource);
+		MessageSourceAdapter messageSourceAdapter = new MessageSourceAdapter(messageSource);
 		super.setMessageSource(messageSourceAdapter);
 	}
 
@@ -21,5 +21,5 @@ public class Application extends org.kani.Application implements ApplicationCont
 		ViewFactory viewFactory = new ViewFactory(applicationContext);
 		this.setViewFactory(viewFactory);
 	}
-
+	
 }
