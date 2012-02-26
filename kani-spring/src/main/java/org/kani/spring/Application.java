@@ -1,3 +1,19 @@
+/*
+ * Copyright 2012 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.kani.spring;
 
 import org.kani.spring.i18n.MessageSourceAdapter;
@@ -11,14 +27,14 @@ import org.springframework.context.MessageSource;
 public class Application extends org.kani.Application implements ApplicationContextAware {
 	
 	@Autowired
-	public void setMessageSource(MessageSource messageSource) {
-		MessageSourceAdapter messageSourceAdapter = new MessageSourceAdapter(messageSource);
+	public void setMessageSource(final MessageSource messageSource) {
+		final MessageSourceAdapter messageSourceAdapter = new MessageSourceAdapter(messageSource);
 		super.setMessageSource(messageSourceAdapter);
 	}
 
 	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		ViewFactory viewFactory = new ViewFactory(applicationContext);
+	public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
+		final ViewFactory viewFactory = new ViewFactory(applicationContext);
 		this.setViewFactory(viewFactory);
 	}
 	
