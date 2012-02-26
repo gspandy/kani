@@ -4,12 +4,16 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.kani.i18n.LocaleHolder;
 import org.kani.i18n.MessageSource;
 import org.kani.i18n.MessageSourceHolder;
 
 import com.vaadin.service.ApplicationContext.TransactionListener;
+import com.vaadin.terminal.ClassResource;
+import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
@@ -29,6 +33,8 @@ import com.vaadin.ui.themes.Reindeer;
 @SuppressWarnings("serial")
 public class Application extends com.vaadin.Application implements TransactionListener {
 	
+    private final static Logger logger = Logger.getLogger(Application.class.getName());
+    
 	Map<String, Object> views = new HashMap<String, Object>();
 
 	private MessageSource messageSource;
@@ -136,9 +142,13 @@ public class Application extends com.vaadin.Application implements TransactionLi
 			try {
 				createMethod = view.getClass().getMethod("create", org.kani.Application.class);
 				Component viewContent = (Component) createMethod.invoke(view, this);
-				tabSheet.addTab(viewContent, viewName);
+
+				String viewIconPath = getMessage(viewKey, "icon");
+				Resource viewIcon = new ClassResource(viewIconPath, this);
+				
+				tabSheet.addTab(viewContent, viewName, viewIcon);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.log(Level.SEVERE, String.format("Could not initialize view %s", viewKey), e);
 			}
 		}
 	}
