@@ -61,12 +61,11 @@ public class Application extends com.vaadin.Application implements TransactionLi
 
 	@Override
 	public void init() {
+		this.setup();
+		
 		if (getContext() != null) {
 			getContext().addTransactionListener(this);
 		}
-
-		this.setup();
-		
 		LocaleHolder.setLocale(getLocale());
 		MessageSourceHolder.setMessageSource(getMessageSource());
 
@@ -75,7 +74,7 @@ public class Application extends com.vaadin.Application implements TransactionLi
 	}
 
 	/**
-	 * Can be overridden by subclasses.
+	 * Shall be overridden by subclasses.
 	 */
 	protected void setup() {}
 
@@ -168,17 +167,27 @@ public class Application extends com.vaadin.Application implements TransactionLi
 		}
 	}
 	
-	private String getMessage(final String codePrefix) {
+	public String getMessage(final String codePrefix) {
 		return getMessage(getApplicationId(), codePrefix);
 	}
 	
-	private String getMessage(final String baseName, final String codePrefix) {
+	public String getMessage(final String baseName, final String codePrefix) {
 		String message = baseName + "." + codePrefix;
 		if (messageSource != null) {
 			message = messageSource.getMessage(baseName + "." + codePrefix);
 		}
 		return message;
 	}
+	
+    public void transactionStart(com.vaadin.Application application, Object transactionData) {
+    	LocaleHolder.setLocale(application.getLocale());
+    	MessageSourceHolder.setMessageSource(getMessageSource());
+    }
+    
+    public void transactionEnd(com.vaadin.Application application, Object transactionData) {
+    	LocaleHolder.reset();
+    	MessageSourceHolder.reset();
+    }
 
 	private MenuBar getMenu() {
 		MenuBar menubar = new MenuBar();
@@ -290,15 +299,5 @@ public class Application extends com.vaadin.Application implements TransactionLi
 			setStyleName(Reindeer.LABEL_SMALL);
 		}
 	}
-	
-    public void transactionStart(com.vaadin.Application application, Object transactionData) {
-    	LocaleHolder.setLocale(application.getLocale());
-    	MessageSourceHolder.setMessageSource(getMessageSource());
-    }
-    
-    public void transactionEnd(com.vaadin.Application application, Object transactionData) {
-    	LocaleHolder.reset();
-    	MessageSourceHolder.reset();
-    }
 
 }
