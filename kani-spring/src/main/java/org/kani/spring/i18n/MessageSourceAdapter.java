@@ -1,12 +1,14 @@
 package org.kani.spring.i18n;
 
+import java.io.Serializable;
 import java.util.logging.Logger;
 
 import org.kani.i18n.LocaleHolder;
 import org.kani.i18n.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 
-public class MessageSourceAdapter implements MessageSource {
+@SuppressWarnings("serial")
+public class MessageSourceAdapter implements MessageSource, Serializable {
 	
     private final static Logger logger = Logger.getLogger(MessageSourceAdapter.class.getName());
 	

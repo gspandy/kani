@@ -35,7 +35,7 @@ public class Application extends com.vaadin.Application implements TransactionLi
 	
     private final static Logger logger = Logger.getLogger(Application.class.getName());
     
-	Map<String, Object> views = new HashMap<String, Object>();
+	private Map<String, Object> views = new HashMap<String, Object>();
 
 	private MessageSource messageSource;
 	
@@ -61,8 +61,7 @@ public class Application extends com.vaadin.Application implements TransactionLi
 	/**
 	 * Can be overridden by subclasses.
 	 */
-	protected void setup() {
-	}
+	protected void setup() {}
 
 	private void initViews() {
 		if (viewFactory == null) {
@@ -278,12 +277,7 @@ public class Application extends com.vaadin.Application implements TransactionLi
 	
     public void transactionStart(com.vaadin.Application application, Object transactionData) {
     	LocaleHolder.setLocale(application.getLocale());
-    	try {
-    		Application kaniApplication = (Application) application;
-    		MessageSourceHolder.setMessageSource(getMessageSource());
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+    	MessageSourceHolder.setMessageSource(getMessageSource());
     }
     
     public void transactionEnd(com.vaadin.Application application, Object transactionData) {

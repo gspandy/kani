@@ -1,5 +1,6 @@
 package org.kani.serviceloader.i18n;
 
+import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
@@ -7,7 +8,8 @@ import java.util.logging.Logger;
 import org.kani.i18n.LocaleHolder;
 import org.kani.i18n.MessageSource;
 
-public class ResourceBundleMessageSource implements MessageSource {
+@SuppressWarnings("serial")
+public class ResourceBundleMessageSource implements MessageSource, Serializable {
 
 	private final static Logger logger = Logger.getLogger(ResourceBundleMessageSource.class.getName());
 
@@ -29,7 +31,7 @@ public class ResourceBundleMessageSource implements MessageSource {
 			}
 			return message;
 		} catch (Exception e) {
-			// TODO: handle exception
+			logger.warning(String.format("No message found for key %s.", code));
 			return code;
 		}
 	}

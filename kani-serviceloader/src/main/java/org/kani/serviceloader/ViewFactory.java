@@ -9,7 +9,7 @@ import org.reflections.Reflections;
 
 public class ViewFactory implements org.kani.ViewFactory {
 
-	public Collection<Object> createAll(String applicationId) {
+	public Collection<Object> createAll(final String applicationId) {
 		try {
 		Set<Class<?>> classes = new Reflections(applicationId).getTypesAnnotatedWith(View.class);
 		Collection<Object> views = new ArrayList<Object>();
