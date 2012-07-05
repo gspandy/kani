@@ -8,7 +8,7 @@
     <packaging>pom</packaging>
     <properties>
         <junit.version>4.10</junit.version>
-        <vaadin.version>6.7.7</vaadin.version>
+        <vaadin.version>6.8.0</vaadin.version>
     </properties>
     <modules>
         <module>../kani-core</module>
