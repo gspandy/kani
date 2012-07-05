@@ -17,6 +17,7 @@
 package org.kani.i18n;
 
 /**
+ * Holds a {@link MessageSource} by binding it to the current thread.
  * @see https://vaadin.com/wiki/-/wiki/Main/ThreadLocal%20Pattern
  */
 public class MessageSourceHolder {

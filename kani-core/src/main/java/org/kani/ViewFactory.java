@@ -18,8 +18,16 @@ package org.kani;
 
 import java.util.Collection;
 
+/**
+ * Creates the views of our application.
+ */
 public interface ViewFactory {
-	
-	Collection<Object> createAll(String applicationId);
+
+	/**
+	 * Creates all views for the application identified by the given id
+	 * @param applicationId the identifier of the application
+	 * @return instances of all views of the application
+	 */
+	Collection<Object> createAll(final String applicationId);
 
 }

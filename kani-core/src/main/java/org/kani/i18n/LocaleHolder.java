@@ -19,6 +19,7 @@ package org.kani.i18n;
 import java.util.Locale;
 
 /**
+ * Holds a locale by binding it to the current thread.
  * @see https://vaadin.com/wiki/-/wiki/Main/ThreadLocal%20Pattern
  */
 public class LocaleHolder {

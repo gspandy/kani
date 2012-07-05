@@ -30,6 +30,7 @@ import org.kani.i18n.MessageSourceHolder;
 import com.vaadin.service.ApplicationContext.TransactionListener;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.terminal.Resource;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
@@ -272,7 +273,7 @@ public class Application extends com.vaadin.Application implements TransactionLi
 
 			});
 			layout.addComponent(close);
-			layout.setComponentAlignment(close, "right");
+			layout.setComponentAlignment(close, Alignment.MIDDLE_RIGHT);
 		}
 		return aboutWindow;
 	}
