@@ -7,7 +7,6 @@
 		<relativePath>../kani-parent</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-    <groupId>org.kani</groupId>
     <artifactId>kani-serviceloader</artifactId>
     <packaging>jar</packaging>
     <name>Kani ServiceLoader</name>
@@ -20,7 +19,7 @@
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
-            <version>0.9.5</version>
+            <version>0.9.8</version>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
@@ -29,6 +28,7 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
