@@ -257,7 +257,7 @@ public class Application extends com.vaadin.Application implements TransactionLi
 			CssLayout titleLayout = new CssLayout();
 			H2 title = new H2("Dynamic Vaadin OSGi Demo");
 			titleLayout.addComponent(title);
-			SmallText description = new SmallText("<br>Copyright (c) PE INTERNATIONAL and others.<br>"
+			SmallText description = new SmallText("<br>Copyright ?? and others.<br>"
 					+ "The icons are from the Silk icon set by Mark James<br>"
 					+ "<a href=\"http://www.famfamfam.com/lab/icons/silk/\">http://www.famfamfam.com/lab/icons/silk/</a>");
 			description.setSizeUndefined();
