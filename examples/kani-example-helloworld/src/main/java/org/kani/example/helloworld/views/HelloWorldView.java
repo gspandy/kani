@@ -18,10 +18,9 @@ package org.kani.example.helloworld.views;
 
 import org.kani.Application;
 import org.kani.annotations.View;
-import org.kani.i18n.MessageSourceHolder;
+import org.kani.ui.KaniLabel;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
 @View
@@ -31,7 +30,7 @@ public class HelloWorldView {
 		final VerticalLayout verticalLayout = new VerticalLayout();
 		verticalLayout.setMargin(true);
 		verticalLayout.setSpacing(true);
-		verticalLayout.addComponent(new Label(MessageSourceHolder.getMessage("helloworld.label.title")));
+		verticalLayout.addComponent(new KaniLabel("helloworld.label.title"));
 		return verticalLayout;
 	}
 
